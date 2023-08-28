@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'webpage',
     'browsing',
     'stats',
-    'django_extensions',
+#    'django_extensions',
     'apis_core.apis_entities',
     'apis_core.apis_metainfo',
     'apis_core.apis_relations',
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'apis_core.apis_vis',
     'rest_framework.authtoken',
     'guardian',
-    'charts',
+#    'charts',
     'gm2m',
 ]
 
