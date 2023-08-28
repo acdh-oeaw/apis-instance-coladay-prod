@@ -54,16 +54,10 @@ DEV_VERSION = False
 
 INSTALLED_APPS += ['corsheaders', 'apis_bibsonomy', 'apis_highlighter']
 
-DATABASES = {
-   'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': os.environ.get('APIS_DB_NAME'),
-         'USER': os.environ.get('APIS_DB_USER'),
-         'PASSWORD': os.environ.get('APIS_DB_PASSWORD'),
-         'HOST': os.environ.get('APIS_DB_HOST', '127.0.0.1'),
-         'PORT': os.environ.get('APIS_DB_PORT', '3306'),
-     }
- }
+DATABASES = {}
+
+#DATABASES["default"] = dj_database_url.parse(os.environ['DATABASE_LOCAL'], conn_max_age=600)
+DATABASES["default"] = dj_database_url.config(conn_max_age=600)
 
 
 CSRF_TRUSTED_ORIGINS = ['sola.acdh-dev.oeaw.ac.at']
@@ -107,16 +101,5 @@ APIS_SKOSMOS = {
 APIS_BASE_URI = "https://sola.acdh-dev.oeaw.ac.at"
 
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-
-sentry_sdk.init(
-    dsn="https://5708cb45635e4bd88a02a7eaaa39f337@sentry.io/1885780",
-    integrations=[DjangoIntegration()],
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
 
 
