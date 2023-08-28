@@ -4,6 +4,9 @@ version = "0.1.0"
 description = "APIS Instance Coladay"
 authors = ["Matthias Schlögl <matthias.schloegl@oeaw.ac.at>"]
 license = "MIT"
+packages = [
+    { include = "apis-instance-coladay-prod", from="." },
+]
 
 
 [tool.poetry.dependencies]
