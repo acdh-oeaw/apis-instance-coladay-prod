@@ -92,6 +92,8 @@ MIDDLEWARE = [
     "reversion.middleware.RevisionMiddleware",
 ]
 
+ALLOWED_CIDR_NETS = ["10.0.0.0/8", "127.0.0.0/8"]
+
 ROOT_URLCONF = "apis.urls"
 
 TEMPLATES = [
