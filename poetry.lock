@@ -43,7 +43,6 @@ develop = false
 
 [package.dependencies]
 convertdate = "^2.3.0"
-dj-database-url = "^0.5.0"
 Django = "~3.1.8"
 django-admin-csvexport = "^1.9"
 django-autocomplete-light = "^3.8.1"
@@ -80,7 +79,7 @@ unicodecsv = "^0.14.1"
 type = "git"
 url = "https://github.com/acdh-oeaw/apis-core.git"
 reference = "coladay"
-resolved_reference = "b488a3269c0136a5be76ca7cd168fdc49259f697"
+resolved_reference = "caa208f5e88e158d837e03289f61b3bedfd8942a"
 
 [[package]]
 name = "apis-highlighter"
@@ -96,6 +95,24 @@ type = "git"
 url = "https://github.com/acdh-oeaw/apis_highlighter.git"
 reference = "main"
 resolved_reference = "b5b8407ca7a60eeaa054733ae8e9b53b106ef95a"
+
+[[package]]
+name = "apis-override-select2js"
+version = "0.1.0"
+description = "Override select2js files in APIS Django projects"
+optional = false
+python-versions = "*"
+files = []
+develop = false
+
+[package.dependencies]
+django = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/acdh-oeaw/apis-override-select2js"
+reference = "v0.1.0"
+resolved_reference = "5829622a64f783b2e38c66334375e64cd41372d4"
 
 [[package]]
 name = "asgiref"
@@ -319,6 +336,21 @@ anytree = ">=2.8.0"
 Django = ">=1.11"
 
 [[package]]
+name = "django-allow-cidr"
+version = "0.6.0"
+description = "A Django Middleware to enable use of CIDR IP ranges in ALLOWED_HOSTS."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-allow-cidr-0.6.0.tar.gz", hash = "sha256:24b71f70257e97bab9fdb5ad8342c96eeea1d45bc06a36332978574252219401"},
+    {file = "django_allow_cidr-0.6.0-py2.py3-none-any.whl", hash = "sha256:6709f4581dfd2a00476a134741a738a7f67714ec4f8596c55b22cf3b2ac5a12e"},
+]
+
+[package.dependencies]
+Django = ">=2.2"
+packaging = "*"
+
+[[package]]
 name = "django-autocomplete-light"
 version = "3.9.4"
 description = "Fresh autocompletes for Django"
@@ -375,6 +407,24 @@ files = [
 
 [package.dependencies]
 django = ">=1.8"
+
+[[package]]
+name = "django-csp"
+version = "3.7"
+description = "Django Content Security Policy support."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django_csp-3.7-py2.py3-none-any.whl", hash = "sha256:01443a07723f9a479d498bd7bb63571aaa771e690f64bde515db6cdb76e8041a"},
+    {file = "django_csp-3.7.tar.gz", hash = "sha256:01eda02ad3f10261c74131cdc0b5a6a62b7c7ad4fd017fbefb7a14776e0a9727"},
+]
+
+[package.dependencies]
+Django = ">=1.8"
+
+[package.extras]
+jinja2 = ["jinja2 (>=2.9.6)"]
+tests = ["jinja2 (>=2.9.6)", "mock (==1.0.1)", "pep8 (==1.4.6)", "pytest (<4.0)", "pytest-django", "pytest-flakes (==1.0.1)", "pytest-pep8 (==1.0.6)", "six (==1.12.0)"]
 
 [[package]]
 name = "django-filter"
@@ -797,6 +847,17 @@ files = [
     {file = "numpy-1.25.2-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4c3abc71e8b6edba80a01a52e66d83c5d14433cbcd26a40c329ec7ed09f37901"},
     {file = "numpy-1.25.2-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:1b9735c27cea5d995496f46a8b1cd7b408b3f34b6d50459d9ac8fe3a20cc17bf"},
     {file = "numpy-1.25.2.tar.gz", hash = "sha256:fd608e19c8d7c55021dffd43bfe5492fab8cc105cc8986f813f8c3c048b38760"},
+]
+
+[[package]]
+name = "packaging"
+version = "23.1"
+description = "Core utilities for Python packages"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "packaging-23.1-py3-none-any.whl", hash = "sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61"},
+    {file = "packaging-23.1.tar.gz", hash = "sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f"},
 ]
 
 [[package]]
@@ -1249,7 +1310,21 @@ files = [
     {file = "webencodings-0.5.1.tar.gz", hash = "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"},
 ]
 
+[[package]]
+name = "whitenoise"
+version = "5.3.0"
+description = "Radically simplified static file serving for WSGI applications"
+optional = false
+python-versions = ">=3.5, <4"
+files = [
+    {file = "whitenoise-5.3.0-py2.py3-none-any.whl", hash = "sha256:d963ef25639d1417e8a247be36e6aedd8c7c6f0a08adcb5a89146980a96b577c"},
+    {file = "whitenoise-5.3.0.tar.gz", hash = "sha256:d234b871b52271ae7ed6d9da47ffe857c76568f11dd30e28e18c5869dbd11e12"},
+]
+
+[package.extras]
+brotli = ["Brotli"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "f77b1e72cf8d9a16711f8ff49cdcdb9644d5e9532b5a85918b1ff7fb75a63fdf"
+content-hash = "f96e78be6c8418a93fec840380806ee678501ab46894e5296432fb7326c34b6f"
