@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "apis-instance-coladay-prod"
+version = "0.1.0"
+description = "APIS Instance Coladay"
+authors = ["Matthias Schlögl <matthias.schloegl@oeaw.ac.at>"]
+license = "MIT"
+
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+mysqlclient = "^2.0.3"
+apis-core = { git = "https://github.com/acdh-oeaw/apis-core.git", branch = "coladay" }
+apis-bibsonomy = { git = "https://github.com/acdh-oeaw/apis-bibsonomy.git", branch = "main" }
+apis-highlighter = { git = "https://github.com/acdh-oeaw/apis_highlighter.git", branch = "main" }
+sentry-sdk = "^1.29.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
