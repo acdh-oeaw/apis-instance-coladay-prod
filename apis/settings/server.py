@@ -69,7 +69,7 @@ REDMINE_ID = "13104"
 
 PROJECT_NAME="coladay"
 
-ALLOWED_HOSTS = ['.sola.sisyphos.arz.oeaw.ac.at', '.sola.acdh-dev.oeaw.ac.at']
+ALLOWED_HOSTS = ['.sola.sisyphos.arz.oeaw.ac.at', '.sola.acdh-dev.oeaw.ac.at', 'coladay-backend-main.acdh-cluster-2.arz.oeaw.ac.at']
 
 EMAIL_HOST = 'smtp.oeaw.ac.at'
 
