@@ -133,7 +133,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-APIS_BASE_URI = "TO CHANGE"
+APIS_BASE_URI = "https://sola.acdh-dev.oeaw.ac.at/apis/api/entity/"
+
+APIS_MIN_CHAR = 3
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -168,6 +170,40 @@ APIS_CETEICEAN_JS = "https://teic.github.io/CETEIcean/js/CETEI.js"
 
 APIS_NEXT_PREV = True
 
+APIS_BIBSONOMY_FIELDS = [
+    # so that the whole entity can be used as well
+    "self",
+    # mutual fields between different entities
+    "migne_number",
+    # TempEntityClass fields
+    "name",
+    "start_date_written",
+    "end_date_written",
+    # Place fields
+    "kind",
+    # Publication fields
+    "clavis_number",
+]
+
+APIS_BIBSONOMY_TEXTS = [
+    # Person texts
+    "Biographie (EN)",
+    "Biographie (DE)",
+    # Institution texts
+    "Beschreibung (EN)",
+    "Beschreibung (DE)",
+    # Passage texts
+    "Inhalt (ist zu übertragen zu publications)",
+    "Übersetzung (EN)",
+    "Übersetzung (DE)",
+    "Originaltext / Zitat",
+    "Auswertung (EN)",
+    "Auswertung (DE)",
+    # Publication texts
+    "Inhalt (EN)",
+    "Inhalt (DE)",
+]
+
 APIS_ALTERNATE_NAMES = [
     "Taufname",
     "Ehename",
@@ -199,9 +235,34 @@ APIS_RELATIONS_FILTER_EXCLUDE = [
     "relation_type__vocab_name",
     "relation_type__name_reverse",
     "__text",
-    "annotation",
     "annotation_set_relation",
 ]
+
+APIS_API_ADDITIONAL_FILTERS = {
+    "Person": [
+        ("publication_set__id", ["in", "exact"]),
+        ("publication_relationtype_set__id", ["in", "exact"]),
+        ("passage_set__id", ["in", "exact"]),
+        ("passage_relationtype_set__id", ["in", "exact"]),
+    ],
+    "Passage": [
+        ("person_set__id", ["in", "exact"]),
+        ("person_relationtype_set__id", ["in", "exact"]),
+        ("event_set__id", ["in", "exact"]),
+        ("event_relationtype_set__id", ["in", "exact"]),
+        ("publication_set__id", ["in", "exact"]),
+        ("publication_set__person_set__id", ["in", "exact"]),
+        ("publication_relationtype_set__id", ["in", "exact"]),
+        ("publication_set__person_relationtype_set__id", ["in", "exact"]),
+    ],
+    "Event": [
+        ("passage_set__id", ["in", "exact"]),
+        ("passage_relationtype_set__id", ["in", "exact"]),
+    ],
+    "PassageType": [
+        ("parent_class__id", ["in", "exact", "isnull"]),
+    ],
+}
 
 APIS_RELATIONS = {
     "list_filters": [("relation_type",)],
@@ -212,7 +273,6 @@ APIS_RELATIONS = {
         "search": [
             "relation_type__name",
             "related_person__name",
-            "related_person__first_name",
             "related_place__name",
         ],
         "list_filters": [("relation_type",), ("related_person",), ("related_place",)],
@@ -222,7 +282,6 @@ APIS_RELATIONS = {
         "search": [
             "relation_type__name",
             "related_person__name",
-            "related_person__first_name",
             "related_institution__name",
         ],
         "list_filters": [
@@ -236,29 +295,38 @@ APIS_RELATIONS = {
         "search": [
             "relation_type__name",
             "related_person__name",
-            "related_person__first_name",
             "related_event__name",
         ],
         "list_filters": [("relation_type",), ("related_person",), ("related_event",)],
     },
-    "PersonWork": {
-        "labels": ["related_person", "related_work", "relation_type"],
+    "PersonPassage": {
+        "labels": ["related_person", "related_passage", "relation_type"],
         "search": [
             "relation_type__name",
             "related_person__name",
-            "related_person__first_name",
-            "related_work__name",
+            "related_passage__name",
         ],
-        "list_filters": [("relation_type",), ("related_person",), ("related_work",)],
+        "list_filters": [("relation_type",), ("related_person",), ("related_passage",)],
+    },
+    "PersonPublication": {
+        "labels": ["related_person", "related_publication", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_person__name",
+            "related_publication__name",
+        ],
+        "list_filters": [
+            ("relation_type",),
+            ("related_person",),
+            ("related_publication",),
+        ],
     },
     "PersonPerson": {
         "labels": ["related_personA", "related_personB", "relation_type"],
         "search": [
             "relation_type__name",
             "related_personA__name",
-            "related_personA__first_name",
             "related_personB__name",
-            "related_personB__first_name",
         ],
         "list_filters": [
             ("relation_type",),
@@ -279,17 +347,30 @@ APIS_RELATIONS = {
             ("related_place",),
         ],
     },
-    "InstitutionWork": {
-        "labels": ["related_institution", "related_work", "relation_type"],
+    "InstitutionPassage": {
+        "labels": ["related_institution", "related_passage", "relation_type"],
         "search": [
             "relation_type__name",
             "related_institution__name",
-            "related_work__name",
+            "related_passage__name",
         ],
         "list_filters": [
             ("relation_type",),
             ("related_institution",),
-            ("related_work",),
+            ("related_passage",),
+        ],
+    },
+    "InstitutionPublication": {
+        "labels": ["related_institution", "related_publication", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_institution__name",
+            "related_publication__name",
+        ],
+        "list_filters": [
+            ("relation_type",),
+            ("related_institution",),
+            ("related_publication",),
         ],
     },
     "InstitutionEvent": {
@@ -318,10 +399,27 @@ APIS_RELATIONS = {
             ("related_institutionB",),
         ],
     },
-    "PlaceWork": {
-        "labels": ["related_work", "related_place", "relation_type"],
-        "search": ["relation_type__name", "related_place__name", "related_work__name"],
-        "list_filters": [("relation_type",), ("related_place",), ("related_work",)],
+    "PlacePassage": {
+        "labels": ["related_passage", "related_place", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_place__name",
+            "related_passage__name",
+        ],
+        "list_filters": [("relation_type",), ("related_place",), ("related_passage",)],
+    },
+    "PlacePublication": {
+        "labels": ["related_publication", "related_place", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_place__name",
+            "related_publication__name",
+        ],
+        "list_filters": [
+            ("relation_type",),
+            ("related_place",),
+            ("related_publication",),
+        ],
     },
     "PlaceEvent": {
         "labels": ["related_event", "related_place", "relation_type"],
@@ -337,10 +435,27 @@ APIS_RELATIONS = {
         ],
         "list_filters": [("relation_type",), ("related_placeA",), ("related_placeB",)],
     },
-    "EventWork": {
-        "labels": ["related_event", "related_work", "relation_type"],
-        "search": ["relation_type__name", "related_event__name", "related_work__name"],
-        "list_filters": [("relation_type",), ("related_event",), ("related_work",)],
+    "EventPassage": {
+        "labels": ["related_event", "related_passage", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_event__name",
+            "related_passage__name",
+        ],
+        "list_filters": [("relation_type",), ("related_event",), ("related_passage",)],
+    },
+    "EventPublication": {
+        "labels": ["related_event", "related_publication", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_event__name",
+            "related_publication__name",
+        ],
+        "list_filters": [
+            ("relation_type",),
+            ("related_event",),
+            ("related_publication",),
+        ],
     },
     "EventEvent": {
         "labels": ["related_eventA", "related_eventB", "relation_type"],
@@ -351,25 +466,93 @@ APIS_RELATIONS = {
         ],
         "list_filters": [("relation_type",), ("related_eventA",), ("related_eventB",)],
     },
-    "WorkWork": {
-        "labels": ["related_workA", "related_workB", "relation_type"],
-        "search": ["relation_type__name", "related_workA__name", "related_workB__name"],
-        "list_filters": [("relation_type",), ("related_workA",), ("related_workB",)],
+    "PassagePublication": {
+        "labels": ["related_passage", "related_publication", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_passage__name",
+            "related_publication__name",
+        ],
+        "list_filters": [
+            ("relation_type",),
+            ("related_passage",),
+            ("related_publication",),
+        ],
+    },
+    "PassagePassage": {
+        "labels": ["related_passageA", "related_passageB", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_passageA__name",
+            "related_passageB__name",
+        ],
+        "list_filters": [
+            ("relation_type",),
+            ("related_passageA",),
+            ("related_passageB",),
+        ],
+    },
+    "PublicationPublication": {
+        "labels": ["related_publicationA", "related_publicationB", "relation_type"],
+        "search": [
+            "relation_type__name",
+            "related_publicationA__name",
+            "related_publicationB__name",
+        ],
+        "list_filters": [
+            ("relation_type",),
+            ("related_publicationA",),
+            ("related_publicationB",),
+        ],
     },
 }
 
+APIS_HIGHLIGHTER_ENTITIES = (
+    "apis_entities.Person",
+    "apis_entities.Institution",
+    "apis_entities.Place",
+    "apis_entities.Event",
+    "apis_entities.Passage",
+    "apis_entities.Publication",
+    "apis_relations.PersonPerson",
+    "apis_relations.PersonPlace",
+    "apis_relations.PersonInstitution",
+    "apis_relations.PersonEvent",
+    "apis_relations.PersonPassage",
+    "apis_relations.PersonPublication",
+    "apis_relations.InstitutionPlace",
+    "apis_relations.InstitutionEvent",
+    "apis_relations.InstitutionPassage",
+    "apis_relations.InstitutionPublication",
+    "apis_relations.InstitutionInstitution",
+    "apis_relations.PlaceEvent",
+    "apis_relations.PlacePassage",
+    "apis_relations.PlacePublication",
+    "apis_relations.PlacePlace",
+    "apis_relations.EventPassage",
+    "apis_relations.EventPublication",
+    "apis_relations.EventEvent",
+    "apis_relations.PassagePublication",
+    "apis_relations.PassagePassage",
+    "apis_relations.PublicationPublication",
+)
+
 APIS_VOCABULARIES = {"exclude": ["userAdded"]}
+
+APIS_METAINFO = {"exclude": ["groups_allowed"]}
 
 APIS_ENTITIES = {
     "Place": {
         "merge": True,
         "search": ["name"],
-        "table_fields": ["name"],
-        "additional_cols": ["lat", "lng", "part_of"],
+        "form_order": ["name", "kind", "lat", "lng", "status", "collection"],
+        "table_fields": ["name", "assigned_user"],
+        "additional_cols": ["id", "lat", "lng", "part_of"],
         "list_filters": [
             {"name": {"method": "name_label_filter"}},
             {"collection": {"label": "Collection"}},
             {"kind": {"label": "Kind of Place"}},
+            "assigned_user",
             "related_entity_name",
             "related_relationtype_name",
             "lat",
@@ -378,33 +561,63 @@ APIS_ENTITIES = {
     },
     "Person": {
         "merge": True,
-        "search": ["name", "first_name"],
-        "form_order": ["first_name", "name"],
-        "table_fields": ["name", "first_name", "start_date_written", "end_date_written"],
-        "additional_cols": ["id", "profession", "gender"],
+        "search": ["name"],
+        "form_order": [
+            "name",
+            "gender",
+            "start_date_written",
+            "end_date_written",
+            "status",
+            "collection",
+            "assigned_user",
+        ],
+        "table_fields": [
+            "name",
+            "assigned_user",
+            "start_date_written",
+            "end_date_written",
+        ],
+        "additional_cols": [
+            "id",
+            "gender",
+        ],
         "list_filters": [
             "name",
             {"gender": {"label": "Gender"}},
             {"start_date": {"label": "Date of Birth"}},
             {"end_date": {"label": "Date of Death"}},
-            {"profession": {"label": "Profession"}},
             {"title": {"label": "Title"}},
             {"collection": {"label": "Collection"}},
+            "assigned_user",
             "related_entity_name",
             "related_relationtype_name",
         ],
-        "api_exclude": [],
     },
     "Institution": {
         "merge": True,
         "search": ["name"],
-        "additional_cols": ["id", "kind", ],
+        "form_order": [
+            "name",
+            "name_english",
+            "start_date_written",
+            "end_date_written",
+            "kind",
+            "status",
+            "collection",
+            "assigned_user",
+        ],
+        "table_fields": ["name", "assigned_user"],
+        "additional_cols": [
+            "id",
+            "kind",
+        ],
         "list_filters": [
             {"name": {"label": "Name or label of institution"}},
             {"kind": {"label": "Kind of Institution"}},
             {"start_date": {"label": "Date of foundation"}},
             {"end_date": {"label": "Date of termination"}},
             {"collection": {"label": "Collection"}},
+            "assigned_user",
             "related_entity_name",
             "related_relationtype_name",
         ],
@@ -412,12 +625,27 @@ APIS_ENTITIES = {
     "Passage": {
         "merge": True,
         "search": ["name"],
-        "additional_cols": ["id", "kind", ],
+        "form_order": [
+            "name",
+            "start_date_written",
+            "end_date_written",
+            "kind",
+            "status",
+            "collection",
+            "assigned_user",
+        ],
+        "table_fields": ["name", "assigned_user"],
+        "additional_cols": [
+            "id",
+            "kind",
+        ],
         "list_filters": [
             {"name": {"label": "Name of Passage"}},
             {"kind": {"label": "Kind of Passage"}},
             {"start_date": {"label": "Date of creation"}},
+            {"end_date": {"label": "Date of termination"}},
             {"collection": {"label": "Collection"}},
+            "assigned_user",
             "related_entity_name",
             "related_relationtype_name",
         ],
@@ -425,11 +653,26 @@ APIS_ENTITIES = {
     "Publication": {
         "merge": True,
         "search": ["name"],
-        "additional_cols": ["id", "kind", ],
-        "list_filters": [
+        "form_order": [
             "name",
+            "start_date_written",
+            "end_date_written",
+            "kind",
+            "status",
+            "collection",
+            "assigned_user",
+        ],
+        "table_fields": ["name", "assigned_user"],
+        "additional_cols": [
+            "id",
+            "kind",
+        ],
+        "list_filters": [
+            {"name": {"label": "Name of publication"}},
+            {"kind": {"label": "Kind of publication"}},
             {"start_date": {"label": "Date of creation"}},
             {"collection": {"label": "Collection"}},
+            "assigned_user",
             "related_entity_name",
             "related_relationtype_name",
         ],
@@ -437,23 +680,38 @@ APIS_ENTITIES = {
     "Event": {
         "merge": True,
         "search": ["name"],
-        "additional_cols": ["id", ],
+        "form_order": [
+            "name",
+            "name_english",
+            "start_date_written",
+            "end_date_written",
+            "kind",
+            "status",
+            "collection",
+            "assigned_user",
+        ],
+        "table_fields": ["name", "assigned_user"],
+        "additional_cols": [
+            "id",
+        ],
         "list_filters": [
             {"name": {"label": "Name of event"}},
             {"kind": {"label": "Kind of Event"}},
             {"start_date": {"label": "Date of beginning"}},
             {"end_date": {"label": "Date of end"}},
             {"collection": {"label": "Collection"}},
+            "assigned_user",
             "related_entity_name",
             "related_relationtype_name",
         ],
     },
 }
 
-
+APIS_API_EXCLUDE_SETS = True  # exclude reverse links to entities
 
 APIS_LIST_VIEWS_ALLOWED = False
 APIS_DETAIL_VIEWS_ALLOWED = False
+MAX_AGE = 60 * 60
 
 APIS_LIST_VIEW_TEMPLATE = "browsing/generic_list.html"
 APIS_DELETE_VIEW_TEMPLATE = "webpage/confirm_delete.html"
