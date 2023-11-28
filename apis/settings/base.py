@@ -133,7 +133,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-APIS_BASE_URI = "https://sola.acdh-dev.oeaw.ac.at/apis/api/entity/"
+APIS_BASE_URI = "https://sola.acdh-dev.oeaw.ac.at/"
+
 
 APIS_MIN_CHAR = 3
 
