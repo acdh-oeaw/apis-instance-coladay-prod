@@ -51,6 +51,8 @@ LOGGING = {
     }
 }
 
+MIDDLEWARE += ['django.middleware.gzip.GZipMiddleware',]
+
 DEV_VERSION = False
 
 INSTALLED_APPS += ['corsheaders', 'apis_bibsonomy', 'apis_highlighter']
