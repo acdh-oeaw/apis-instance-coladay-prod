@@ -16,7 +16,7 @@ six = "*"
 
 [[package]]
 name = "apis-bibsonomy"
-version = "0.8.0"
+version = "0.8.1"
 description = "Bibsonomy/Zotero plugin for managing refernces in APIS framework"
 optional = false
 python-versions = "^3.11"
@@ -30,8 +30,8 @@ jmespath = "^0.10.0"
 [package.source]
 type = "git"
 url = "https://github.com/acdh-oeaw/apis-bibsonomy.git"
-reference = "5e58fc40dcd9318116f1c68b2b8206dd00d0370f"
-resolved_reference = "5e58fc40dcd9318116f1c68b2b8206dd00d0370f"
+reference = "affb0a68ef766a853ca665afcb55fd4f9f0fbc2a"
+resolved_reference = "affb0a68ef766a853ca665afcb55fd4f9f0fbc2a"
 
 [[package]]
 name = "apis-core"
@@ -1368,4 +1368,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "eb9523e31f732f34fbeff33861bba17b484636bf2f7b73f832a7c44cf4e6f827"
+content-hash = "bc59723ba2c3c710ec7fb71059f03da9c3b7f11a06aaf89c92b05e1dd30a6089"

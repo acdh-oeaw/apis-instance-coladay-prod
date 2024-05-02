@@ -16,7 +16,7 @@ packages = [
 python = ">=3.11,<3.12"
 mysqlclient = "^2.0.3"
 apis-core = { git = "https://github.com/acdh-oeaw/apis-core.git", rev = "761e515c7b390f6431de29f22cf5fb7687bdcdb1" }
-apis-bibsonomy = { git = "https://github.com/acdh-oeaw/apis-bibsonomy.git", rev = "5e58fc40dcd9318116f1c68b2b8206dd00d0370f"}
+apis-bibsonomy = { git = "https://github.com/acdh-oeaw/apis-bibsonomy.git", rev = "affb0a68ef766a853ca665afcb55fd4f9f0fbc2a"}
 apis-highlighter = { git = "https://github.com/acdh-oeaw/apis_highlighter.git", rev = "b5b8407ca7a60eeaa054733ae8e9b53b106ef95a" }
 sentry-sdk = "^1.29.2"
 dj-database-url = "^0.5.0"
